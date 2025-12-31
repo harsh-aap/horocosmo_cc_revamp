@@ -1,0 +1,124 @@
+src/
+├── main.ts                                    # 🚀 Application entry point
+├── app.module.ts                             # 📦 Root application module
+├── app.controller.ts                         # 🏠 Basic app controller
+├── app.service.ts                            # 🔧 Basic app service
+│
+├── config/                                   # ⚙️ Configuration files
+│   ├── database.config.ts                    # 🗄️ PostgreSQL connection config
+│   ├── redis.config.ts                       # 🚀 Redis connection config
+│   └── queue.config.ts                       # 📨 Bull queue config
+│
+├── app/                                      # 🏠 Application bootstrap
+│   ├── app.module.ts                         # 📦 Main app module (imports everything)
+│   ├── app.controller.ts                     # 🏠 Health check endpoints
+│   └── app.service.ts                        # 🔧 App-level services
+│
+├── core/                                     # 🎯 Business logic (latency-critical)
+│   ├── auth/                                 # 🔐 Authentication system
+│   │   ├── auth.module.ts
+│   │   ├── auth.service.ts
+│   │   ├── auth.controller.ts
+│   │   ├── jwt.strategy.ts
+│   │   └── dto/
+│   │       ├── login.dto.ts
+│   │       └── register.dto.ts
+│   │
+│   ├── user/                                 # 👥 User management
+│   │   ├── user.module.ts
+│   │   ├── user.service.ts
+│   │   ├── user.controller.ts
+│   │   ├── user-sync.controller.ts          # 📡 Sync from main backend
+│   │   ├── user-sync.service.ts             # 🔄 Sync logic
+│   │   └── dto/
+│   │       ├── create-user.dto.ts
+│   │       └── update-user.dto.ts
+│   │
+│   ├── session/                              # 🎪 Session management
+│   │   ├── session.module.ts
+│   │   ├── session.service.ts
+│   │   ├── session.controller.ts
+│   │   └── dto/
+│   │       ├── create-session.dto.ts
+│   │       └── session-response.dto.ts
+│   │
+│   ├── chat/                                 # 💬 Real-time chat
+│   │   ├── chat.module.ts
+│   │   ├── chat.gateway.ts                   # 🌐 WebSocket gateway
+│   │   ├── chat.service.ts
+│   │   ├── message.service.ts
+│   │   └── dto/
+│   │       ├── send-message.dto.ts
+│   │       └── message-response.dto.ts
+│   │
+│   └── billing/                              # 💰 Billing system
+│       ├── billing.module.ts
+│       ├── billing.service.ts
+│       ├── billing.controller.ts
+│       └── dto/
+│           ├── create-transaction.dto.ts
+│           └── billing-response.dto.ts
+│
+├── infrastructure/                           # 🏗️ Infrastructure layer
+│   ├── database/                             # 🗄️ Database layer
+│   │   ├── database.module.ts                # 🏗️ DB connection & config
+│   │   ├── database.service.ts               # 🔧 Query optimization & health
+│   │   └── entities/                         # 📋 Database entities
+│   │       ├── user.entity.ts                # 👤 User table schema
+│   │       ├── session.entity.ts             # 🎪 Session table schema
+│   │       ├── message.entity.ts             # 💬 Message table schema
+│   │       └── billing.entity.ts             # 💰 Transaction table schema
+│   │
+│   ├── cache/                                # 🚀 Redis caching
+│   │   ├── cache.module.ts                   # 🏗️ Redis connection
+│   │   ├── cache.service.ts                  # 🔧 Cache operations
+│   │   └── strategies/                       # 🎯 Cache strategies
+│   │       └── cache-strategies.service.ts
+│   │
+│   ├── messaging/                            # 📨 Message queues
+│   │   ├── messaging.module.ts               # 🏗️ Bull queue setup
+│   │   ├── messaging.service.ts              # 🔧 Queue operations
+│   │   └── processors/                       # ⚙️ Queue processors
+│   │       ├── message.processor.ts          # 💬 Message processing
+│   │       ├── billing.processor.ts          # 💰 Billing processing
+│   │       └── notification.processor.ts     # 🔔 Notification processing
+│   │
+│   ├── monitoring/                           # 📊 Observability
+│   │   ├── monitoring.module.ts              # 🏗️ Prometheus setup
+│   │   ├── monitoring.service.ts             # 🔧 Metrics collection
+│   │   ├── health.controller.ts              # 💚 Health check endpoint
+│   │   └── metrics.controller.ts             # 📊 Metrics endpoint
+│   │
+│   └── security/                             # 🛡️ Security layer
+│       ├── security.module.ts                # 🏗️ Security setup
+│       ├── security.service.ts               # 🔧 Security utilities
+│       └── rate-limiter.service.ts           # 🚦 Rate limiting
+│
+├── shared/                                   # 🔧 Shared utilities
+│   ├── decorators/                           # 🎭 Custom decorators
+│   │   ├── public.decorator.ts               # 🌐 Public route decorator
+│   │   └── cache.decorator.ts                # 🚀 Cache decorator
+│   │
+│   ├── guards/                               # 🛡️ Route guards
+│   │   ├── jwt.guard.ts                      # 🔐 JWT authentication guard
+│   │   └── role.guard.ts                     # 👥 Role-based access guard
+│   │
+│   ├── interceptors/                         # 🎯 Request interceptors
+│   │   ├── logging.interceptor.ts            # 📝 Request logging
+│   │   └── timeout.interceptor.ts            # ⏱️ Request timeout
+│   │
+│   ├── interfaces/                           # 🔗 Type definitions
+│   │   ├── user.interface.ts                 # 👤 User type definitions
+│   │   ├── session.interface.ts              # 🎪 Session types
+│   │   └── message.interface.ts              # 💬 Message types
+│   │
+│   └── utils/                                # 🛠️ Utility functions
+│       ├── date.utils.ts                     # 📅 Date helpers
+│       ├── crypto.utils.ts                   # 🔐 Crypto helpers
+│       └── validation.utils.ts               # ✅ Validation helpers
+│
+└── integrations/                             # 🔗 External services
+    ├── ai/                                   # 🤖 OpenAI integration
+    ├── video-sdk/                            # 📹 Video calling
+    ├── notifications/                        # 🔔 Push notifications
+    └── payment/                              # 💳 Payment processing
