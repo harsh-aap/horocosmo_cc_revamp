@@ -48,7 +48,6 @@ export class ResponseInterceptor<T> implements NestInterceptor<
 
   private getSuccessMessage(context: ExecutionContext): string {
     const handler = context.getHandler();
-    const methodName = handler.name;
 
     // Default success messages based on HTTP method
     const method = context.switchToHttp().getRequest().method;
