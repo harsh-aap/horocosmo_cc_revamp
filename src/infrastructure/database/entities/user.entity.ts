@@ -106,9 +106,9 @@ export class User {
   updated_at: Date;
 
   // Business Methods (Domain Logic)
-  updateProfile(updates: { name?: string; phone?: string }): void {
+  updateProfile(updates: { name?: string; email?: string }): void {
     if (updates.name) this.name = updates.name;
-    if (updates.phone !== undefined) this.phone = updates.phone;
+    if (updates.email !== undefined) this.email = updates.email;
     this.updated_at = new Date();
   }
 

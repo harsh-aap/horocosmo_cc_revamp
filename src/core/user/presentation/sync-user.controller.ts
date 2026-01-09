@@ -4,16 +4,30 @@ import { SyncUserUseCase } from '../application/usecaes/sync-user.usecase';
 import { SyncUserRequestDto } from './dto/sync-user-request.dto';
 import { UserType } from 'src/infrastructure/database/entities/user.entity';
 
-@ApiTags('Users')
-@Controller('users')
+/**
+ * UserController
+ *
+ * Handles HTTP requests related to user operations.
+ * This controller is part of the Presentation Layer in a layered architecture.
+ */
+@ApiTags('Users') // Swagger tag for grouping endpoints in API docs
+@Controller('users') // Base path for all routes in this controller
 export class UserController {
   constructor(private readonly syncUserUseCase: SyncUserUseCase) {}
+  // Inject the SyncUserUseCase to handle business logic
 
-  @Post('sync')
-  @HttpCode(HttpStatus.OK)
+  /**
+   * Sync user endpoint
+   *
+   * This endpoint synchronizes user data from an external system.
+   * If the user exists, it updates their profile; otherwise, it creates a new user.
+   */
+  @Post('sync') // HTTP POST endpoint at /users/sync
+  @HttpCode(HttpStatus.OK) // Returns 200 OK even for creation (instead of 201)
   @ApiOperation({
     summary: 'Sync user from external backend',
-    description: 'Synchronizes user data from the main horoscope backend. Creates new user if not exists, updates existing user.',
+    description:
+      'Synchronizes user data from the main horoscope backend. Creates new user if not exists, updates existing user.',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -21,9 +35,9 @@ export class UserController {
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean', example: true },
+        success: { type: 'boolean', example: true }, // Indicates request success
         data: {
-          type: 'object',
+          type: 'object', // User object returned
           properties: {
             id: { type: 'string', example: '550e8400-e29b-41d4-a716-446655440000' },
             name: { type: 'string', example: 'John Doe' },
@@ -37,18 +51,19 @@ export class UserController {
             updated_at: { type: 'string', format: 'date-time' },
           },
         },
-        message: { type: 'string', example: 'User synchronized successfully' },
-        timestamp: { type: 'string', format: 'date-time' },
-        path: { type: 'string', example: '/api/v2/users/sync' },
-        method: { type: 'string', example: 'POST' },
+        message: { type: 'string', example: 'User synchronized successfully' }, // Human-readable status message
+        timestamp: { type: 'string', format: 'date-time' }, // Request timestamp
+        path: { type: 'string', example: '/api/v2/users/sync' }, // Request path
+        method: { type: 'string', example: 'POST' }, // HTTP method
       },
     },
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
-    description: 'Invalid input data',
+    description: 'Invalid input data', // Swagger docs for 400 error
   })
   async syncUser(@Body() request: SyncUserRequestDto) {
+    // Map incoming DTO to the use case input
     const user = await this.syncUserUseCase.execute({
       externalId: request.externalId,
       name: request.name,
@@ -57,6 +72,7 @@ export class UserController {
       phone: request.phone,
     });
 
+    // Return a structured API response
     return {
       success: true,
       data: user,
@@ -64,3 +80,4 @@ export class UserController {
     };
   }
 }
+

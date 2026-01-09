@@ -16,47 +16,49 @@ export class SyncUserUseCase {
   ) {}
 
   async execute(input: SyncUserInput): Promise<User> {
-    // ✅ Correct return type
     try {
-      this.logger.debug(`Sync user with external ID: ${input.externalId}`);
-
+      // Try to find an existing user by externalId
       let user = await this.userPort.findByExternalId(input.externalId);
 
       if (user) {
-        // Update existing user
-        this.logger.debug(`Updating existing user: ${user.id}`);
+        // If user exists, update the profile fields with the new data
         user.updateProfile({
           name: input.name,
           phone: input.phone,
         });
+
+        // Mark the user as synced
         user.markAsSynced();
+
+        // Save the updated user back to the database
         const updatedUser = await this.userPort.save(user);
-        this.logger.log(`Successfully updated user: ${updatedUser.id}`);
+
+        // Return the updated user
         return updatedUser;
       } else {
-        // Create new user
-        this.logger.debug(
-          `Creating new user with external ID: ${input.externalId}`,
-        );
-
+        // If user does not exist, prepare a new user entity
         const newUserData = User.create({
           name: input.name,
-          email: input.email || undefined, // ✅ Handle optional email
+          email: input.email || undefined,
           externalId: input.externalId,
           type: input.type,
           phone: input.phone,
         });
 
+        // Create the new user in the database
         const newUser = await this.userPort.create(newUserData);
+
+        // Mark the new user as synced
         newUser.markAsSynced();
 
-        // ✅ Remove duplicate save - create() already saves
-        this.logger.log(`Successfully created user: ${newUser.id}`);
+        // Return the newly created user
         return newUser;
       }
     } catch (error) {
+      // If anything fails, log the error and rethrow
       this.logger.error(`Failed to sync user ${input.externalId}`, error);
-      throw error; // ✅ Re-throw error
+      throw error;
     }
   }
 }
+

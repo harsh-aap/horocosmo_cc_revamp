@@ -2,33 +2,48 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/infrastructure/database/entities/user.entity';
 import { SYNC_USER_PORT } from './application/interfaces/sync-user.interface';
-// Application Layer
 import { SyncUserUseCase } from './application/usecaes/sync-user.usecase';
-// Infrastructure Layer
-import { UserRepository } from './infrastructure/user.repository';
-// Presentation Layer
+import { SyncUserRepository } from './infrastructure/sync-user.repository';
 import { UserController } from './presentation/sync-user.controller';
 
+/**
+ * UserModule
+ *
+ * This module encapsulates all user-related functionality, following
+ * the layered architecture pattern:
+ * 1. Presentation Layer: HTTP controller for API requests
+ * 2. Application Layer: Business logic use cases
+ * 3. Infrastructure Layer: Database persistence and external integrations
+ */
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]), // Register User entity for this module
+    // Register the TypeORM repository for the User entity
+    // This allows dependency injection of the repository in services
+    TypeOrmModule.forFeature([User]),
   ],
   controllers: [
-    UserController, // Register the HTTP controller
+    // HTTP endpoints for user-related actions
+    UserController,
   ],
   providers: [
-    // Repository implementation
-    UserRepository,
-    // Dependency injection: Map interface to implementation
+    // 1. Repository implementation
+    // Provides the database operations for users
+    SyncUserRepository,
+
+    // 2. Dependency Injection mapping
+    // Map the SyncUserPort interface to the concrete UserRepository implementation
     {
       provide: SYNC_USER_PORT,
-      useClass: UserRepository,
+      useClass: SyncUserRepository,
     },
-    // Use Cases (business logic)
+
+    // 3. Use Cases
+    // Business logic that orchestrates user creation/syncing
     SyncUserUseCase,
   ],
   exports: [
-    SyncUserUseCase, // Export use case for other modules to use
+    // Export use cases for other modules to use
+    SyncUserUseCase,
   ],
 })
 export class UserModule {}
