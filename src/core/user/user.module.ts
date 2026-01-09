@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/infrastructure/database/entities/user.entity';
+import { SYNC_USER_PORT } from './application/interfaces/sync-user.interface';
 // Application Layer
 import { SyncUserUseCase } from './application/usecaes/sync-user.usecase';
 // Infrastructure Layer
@@ -20,7 +21,7 @@ import { UserController } from './presentation/sync-user.controller';
     UserRepository,
     // Dependency injection: Map interface to implementation
     {
-      provide: 'SyncUserPort',
+      provide: SYNC_USER_PORT,
       useClass: UserRepository,
     },
     // Use Cases (business logic)
