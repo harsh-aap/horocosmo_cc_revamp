@@ -18,42 +18,23 @@ export class SyncUserUseCase {
   async execute(input: SyncUserInput): Promise<User> {
     try {
       // Try to find an existing user by externalId
-      let user = await this.userPort.findByExternalId(input.externalId);
-
-      if (user) {
-        // If user exists, update the profile fields with the new data
-        user.updateProfile({
-          name: input.name,
-          phone: input.phone,
-        });
-
-        // Mark the user as synced
-        user.markAsSynced();
-
-        // Save the updated user back to the database
-        const updatedUser = await this.userPort.save(user);
-
-        // Return the updated user
-        return updatedUser;
-      } else {
-        // If user does not exist, prepare a new user entity
-        const newUserData = User.create({
-          name: input.name,
-          email: input.email || undefined,
-          externalId: input.externalId,
-          type: input.type,
-          phone: input.phone,
-        });
-
-        // Create the new user in the database
-        const newUser = await this.userPort.create(newUserData);
-
-        // Mark the new user as synced
-        newUser.markAsSynced();
-
-        // Return the newly created user
-        return newUser;
+      let existingUser = await this.userPort.findByExternalId(input.externalId);
+      if (existingUser) {
+        existingUser.markAsSynced();
+        return this.userPort.save(existingUser);
       }
+
+      // create a new user
+      const user = User.create({
+        name: input.name,
+        email: input.email ? input.email : '',
+        phone: input.phone,
+        type: input.type,
+        externalId: input.externalId,
+      });
+
+      const savedUser = await this.userPort.create(user);
+      return savedUser;
     } catch (error) {
       // If anything fails, log the error and rethrow
       this.logger.error(`Failed to sync user ${input.externalId}`, error);
@@ -61,4 +42,3 @@ export class SyncUserUseCase {
     }
   }
 }
-

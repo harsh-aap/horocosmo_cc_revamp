@@ -1,33 +1,48 @@
-import { Controller, Post, Body, HttpStatus, HttpCode } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  Put,
+  HttpStatus,
+  HttpCode,
+} from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+
 import { SyncUserUseCase } from '../application/usecaes/sync-user.usecase';
+import { GetUserProfileUseCase } from '../application/usecaes/get-user.usecase';
+import { UpdateUserProfileUseCase } from '../application/usecaes/update-user-profile.usecase';
+import { GetActiveAstrologersUseCase } from '../application/usecaes/get-active-astrologers.usecase';
+
 import { SyncUserRequestDto } from './dto/sync-user-request.dto';
+import { UpdateProfileRequestDto } from './dto/update-profile-request.dto';
 import { UserType } from 'src/infrastructure/database/entities/user.entity';
 
 /**
  * UserController
  *
- * Handles HTTP requests related to user operations.
+ * Handles all HTTP requests related to user operations.
  * This controller is part of the Presentation Layer in a layered architecture.
  */
-@ApiTags('Users') // Swagger tag for grouping endpoints in API docs
-@Controller('users') // Base path for all routes in this controller
+@ApiTags('Users')
+@Controller('users')
 export class UserController {
-  constructor(private readonly syncUserUseCase: SyncUserUseCase) {}
-  // Inject the SyncUserUseCase to handle business logic
+  constructor(
+    private readonly syncUserUseCase: SyncUserUseCase,
+    private readonly getUserProfileUseCase: GetUserProfileUseCase,
+    private readonly updateUserProfileUseCase: UpdateUserProfileUseCase,
+    private readonly getActiveAstrologersUseCase: GetActiveAstrologersUseCase,
+  ) {}
 
   /**
-   * Sync user endpoint
-   *
-   * This endpoint synchronizes user data from an external system.
-   * If the user exists, it updates their profile; otherwise, it creates a new user.
+   * Sync user from external system
    */
-  @Post('sync') // HTTP POST endpoint at /users/sync
-  @HttpCode(HttpStatus.OK) // Returns 200 OK even for creation (instead of 201)
+  @Post('sync')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Sync user from external backend',
-    description:
-      'Synchronizes user data from the main horoscope backend. Creates new user if not exists, updates existing user.',
+    description: 'Synchronizes user data from the main horoscope backend.',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -35,35 +50,23 @@ export class UserController {
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean', example: true }, // Indicates request success
+        success: { type: 'boolean', example: true },
         data: {
-          type: 'object', // User object returned
+          type: 'object',
           properties: {
-            id: { type: 'string', example: '550e8400-e29b-41d4-a716-446655440000' },
-            name: { type: 'string', example: 'John Doe' },
-            email: { type: 'string', example: 'john@example.com' },
-            type: { type: 'string', enum: ['user', 'astrologer'], example: 'user' },
-            status: { type: 'string', enum: ['active', 'inactive', 'suspended'], example: 'active' },
-            sync_status: { type: 'string', enum: ['synced', 'pending', 'failed'], example: 'synced' },
-            last_sync_at: { type: 'string', format: 'date-time' },
-            phone: { type: 'string', example: '+1234567890', nullable: true },
-            created_at: { type: 'string', format: 'date-time' },
-            updated_at: { type: 'string', format: 'date-time' },
+            id: { type: 'string' },
+            name: { type: 'string' },
+            email: { type: 'string', nullable: true },
+            type: { type: 'string', enum: ['user', 'astrologer'] },
+            status: { type: 'string', enum: ['active', 'inactive', 'suspended'] },
+            phone: { type: 'string', nullable: true },
           },
         },
-        message: { type: 'string', example: 'User synchronized successfully' }, // Human-readable status message
-        timestamp: { type: 'string', format: 'date-time' }, // Request timestamp
-        path: { type: 'string', example: '/api/v2/users/sync' }, // Request path
-        method: { type: 'string', example: 'POST' }, // HTTP method
+        message: { type: 'string', example: 'User synchronized successfully' },
       },
     },
   })
-  @ApiResponse({
-    status: HttpStatus.BAD_REQUEST,
-    description: 'Invalid input data', // Swagger docs for 400 error
-  })
   async syncUser(@Body() request: SyncUserRequestDto) {
-    // Map incoming DTO to the use case input
     const user = await this.syncUserUseCase.execute({
       externalId: request.externalId,
       name: request.name,
@@ -72,12 +75,136 @@ export class UserController {
       phone: request.phone,
     });
 
-    // Return a structured API response
     return {
       success: true,
       data: user,
       message: 'User synchronized successfully',
     };
   }
-}
 
+  /**
+   * Get user profile by ID
+   */
+  @Get(':id/profile')
+  @ApiOperation({
+    summary: 'Get user profile',
+    description: 'Retrieves a user profile by their ID.',
+  })
+  @ApiParam({ name: 'id', description: 'User ID', type: String })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'User profile retrieved successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: true },
+        data: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            name: { type: 'string' },
+            email: { type: 'string', nullable: true },
+            phone: { type: 'string', nullable: true },
+            type: { type: 'string', enum: ['user', 'astrologer'] },
+            status: { type: 'string', enum: ['active', 'inactive', 'suspended'] },
+          },
+        },
+        message: { type: 'string', example: 'User profile retrieved successfully' },
+      },
+    },
+  })
+  async getUserProfile(@Param('id') userId: string) {
+    const user = await this.getUserProfileUseCase.execute(userId);
+
+    return {
+      success: true,
+      data: user,
+      message: 'User profile retrieved successfully',
+    };
+  }
+
+  /**
+   * Update user profile
+   */
+  @Put(':id/profile')
+  @ApiOperation({
+    summary: 'Update user profile',
+    description: 'Updates a user profile with provided data.',
+  })
+  @ApiParam({ name: 'id', description: 'User ID', type: String })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'User profile updated successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: true },
+        data: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            name: { type: 'string' },
+            email: { type: 'string', nullable: true },
+            phone: { type: 'string', nullable: true },
+          },
+        },
+        message: { type: 'string', example: 'User profile updated successfully' },
+      },
+    },
+  })
+  async updateUserProfile(
+    @Param('id') userId: string,
+    @Body() request: UpdateProfileRequestDto,
+  ) {
+    const user = await this.updateUserProfileUseCase.execute(userId, request);
+
+    return {
+      success: true,
+      data: user,
+      message: 'User profile updated successfully',
+    };
+  }
+
+  /**
+   * Get active astrologers
+   */
+  @Get('astrologers/active')
+  @ApiOperation({
+    summary: 'Get active astrologers',
+    description: 'Retrieves a list of all active astrologers.',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Active astrologers retrieved successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: true },
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'string' },
+              name: { type: 'string' },
+              email: { type: 'string', nullable: true },
+              phone: { type: 'string', nullable: true },
+              completed_consultations: { type: 'number', example: 150 },
+              rating: { type: 'number', example: 4.8 },
+            },
+          },
+        },
+        message: { type: 'string', example: 'Active astrologers retrieved successfully' },
+      },
+    },
+  })
+  async getActiveAstrologers() {
+    const astrologers = await this.getActiveAstrologersUseCase.execute();
+
+    return {
+      success: true,
+      data: astrologers,
+      message: 'Active astrologers retrieved successfully',
+    };
+  }
+}
