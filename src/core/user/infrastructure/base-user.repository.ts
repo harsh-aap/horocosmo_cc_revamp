@@ -30,7 +30,6 @@ export class BaseUserRepository {
    * @returns The User entity if found, otherwise null
    */
   async findById(id: string): Promise<User | null> {
-    this.logger.debug(`Finding user by ID: ${id}`);
     return this.repo.findOne({ where: { id } });
   }
 

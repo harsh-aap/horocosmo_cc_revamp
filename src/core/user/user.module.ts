@@ -4,7 +4,7 @@ import { User } from 'src/infrastructure/database/entities/user.entity';
 import { SYNC_USER_PORT } from './application/interfaces/sync-user.interface';
 import { SyncUserUseCase } from './application/usecaes/sync-user.usecase';
 import { SyncUserRepository } from './infrastructure/sync-user.repository';
-import { UserController } from './presentation/sync-user.controller';
+import { UserController } from './presentation/user.controller';
 import { UserProfileRepository } from './infrastructure/user-profile.repository';
 import { UserLookupRepository } from './infrastructure/user-lookup.repository';
 import { USER_PROFILE_PORT } from './application/interfaces/user-profile.interface';

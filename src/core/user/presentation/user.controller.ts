@@ -58,7 +58,10 @@ export class UserController {
             name: { type: 'string' },
             email: { type: 'string', nullable: true },
             type: { type: 'string', enum: ['user', 'astrologer'] },
-            status: { type: 'string', enum: ['active', 'inactive', 'suspended'] },
+            status: {
+              type: 'string',
+              enum: ['active', 'inactive', 'suspended'],
+            },
             phone: { type: 'string', nullable: true },
           },
         },
@@ -106,16 +109,21 @@ export class UserController {
             email: { type: 'string', nullable: true },
             phone: { type: 'string', nullable: true },
             type: { type: 'string', enum: ['user', 'astrologer'] },
-            status: { type: 'string', enum: ['active', 'inactive', 'suspended'] },
+            status: {
+              type: 'string',
+              enum: ['active', 'inactive', 'suspended'],
+            },
           },
         },
-        message: { type: 'string', example: 'User profile retrieved successfully' },
+        message: {
+          type: 'string',
+          example: 'User profile retrieved successfully',
+        },
       },
     },
   })
   async getUserProfile(@Param('id') userId: string) {
     const user = await this.getUserProfileUseCase.execute(userId);
-
     return {
       success: true,
       data: user,
@@ -148,7 +156,10 @@ export class UserController {
             phone: { type: 'string', nullable: true },
           },
         },
-        message: { type: 'string', example: 'User profile updated successfully' },
+        message: {
+          type: 'string',
+          example: 'User profile updated successfully',
+        },
       },
     },
   })
@@ -194,7 +205,10 @@ export class UserController {
             },
           },
         },
-        message: { type: 'string', example: 'Active astrologers retrieved successfully' },
+        message: {
+          type: 'string',
+          example: 'Active astrologers retrieved successfully',
+        },
       },
     },
   })

@@ -14,15 +14,6 @@ import { Logger } from '@nestjs/common';
  * Logs creation for debugging purposes.
  */
 export class SyncUserRequestDto {
-  private readonly logger = new Logger(SyncUserRequestDto.name);
-
-  constructor(partial?: Partial<SyncUserRequestDto>) {
-    if (partial) {
-      Object.assign(this, partial);
-      this.logger.debug(`SyncUserRequestDto created with data: ${JSON.stringify(partial)}`);
-    }
-  }
-
   @IsString()
   @IsNotEmpty()
   externalId: string;
@@ -42,4 +33,3 @@ export class SyncUserRequestDto {
   @IsNotEmpty()
   phone: string;
 }
-
