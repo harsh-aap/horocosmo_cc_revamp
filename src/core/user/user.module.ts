@@ -12,6 +12,7 @@ import { USER_LOOKUP_PORT } from './application/interfaces/user-lookup.interface
 import { GetActiveAstrologersUseCase } from './application/usecaes/get-active-astrologers.usecase';
 import { GetUserProfileUseCase } from './application/usecaes/get-user.usecase';
 import { UpdateUserProfileUseCase } from './application/usecaes/update-user-profile.usecase';
+import { GetActiveUsersUseCase } from './application/usecaes/get-active-users.usecase';
 
 /**
  * UserModule
@@ -59,6 +60,7 @@ import { UpdateUserProfileUseCase } from './application/usecaes/update-user-prof
     GetActiveAstrologersUseCase,
     GetUserProfileUseCase,
     UpdateUserProfileUseCase,
+    GetActiveUsersUseCase
   ],
   exports: [
     // Export use cases for other modules to use
@@ -66,6 +68,7 @@ import { UpdateUserProfileUseCase } from './application/usecaes/update-user-prof
     GetActiveAstrologersUseCase,
     GetUserProfileUseCase,
     UpdateUserProfileUseCase,
+    GetActiveUsersUseCase
   ],
 })
 export class UserModule {}

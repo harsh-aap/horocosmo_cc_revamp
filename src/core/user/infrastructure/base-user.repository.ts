@@ -1,7 +1,11 @@
-import { Injectable, Logger } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, In } from "typeorm";
-import { User, UserType, UserStatus } from "src/infrastructure/database/entities/user.entity";
+import { Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, In } from 'typeorm';
+import {
+  User,
+  UserType,
+  UserStatus,
+} from 'src/infrastructure/database/entities/user.entity';
 
 /**
  * BaseUserRepository
@@ -123,4 +127,3 @@ export class BaseUserRepository {
     return this.repo.save(user);
   }
 }
-

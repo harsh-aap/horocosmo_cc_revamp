@@ -37,7 +37,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
       method: request.method,
       requestId: request.headers['x-request-id'] || `req_${Date.now()}`,
     };
-    
+    // Fix: Actually send the response!
+    response.status(status).json(ErrorResponse);
   }
 
   private getErrorCode(status: number, message: string): string {

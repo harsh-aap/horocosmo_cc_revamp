@@ -14,7 +14,7 @@ import { SyncUserUseCase } from '../application/usecaes/sync-user.usecase';
 import { GetUserProfileUseCase } from '../application/usecaes/get-user.usecase';
 import { UpdateUserProfileUseCase } from '../application/usecaes/update-user-profile.usecase';
 import { GetActiveAstrologersUseCase } from '../application/usecaes/get-active-astrologers.usecase';
-
+import { GetActiveUsersUseCase } from '../application/usecaes/get-active-users.usecase';
 import { SyncUserRequestDto } from './dto/sync-user-request.dto';
 import { UpdateProfileRequestDto } from './dto/update-profile-request.dto';
 import { UserType } from 'src/infrastructure/database/entities/user.entity';
@@ -33,6 +33,7 @@ export class UserController {
     private readonly getUserProfileUseCase: GetUserProfileUseCase,
     private readonly updateUserProfileUseCase: UpdateUserProfileUseCase,
     private readonly getActiveAstrologersUseCase: GetActiveAstrologersUseCase,
+    private readonly getActiveUserUseCase: GetActiveUsersUseCase,
   ) {}
 
   /**
@@ -176,6 +177,49 @@ export class UserController {
     };
   }
 
+  /**
+   * Get Active users
+   */
+  @Get('active')
+  @ApiOperation({
+    summary: 'Get active users',
+    description: 'Retrieves a list of all active users.',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Active users retrieved successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: true },
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'string' },
+              name: { type: 'string' },
+              email: { type: 'string', nullable: true },
+              phone: { type: 'string', nullable: true },
+              completed_consultations: { type: 'number', example: 150 },
+            },
+          },
+        },
+        message: {
+          type: 'string',
+          example: 'Active users retrieved successfully',
+        },
+      },
+    },
+  })
+  async getActiveUsers() {
+    const users = await this.getActiveUserUseCase.execute();
+    return {
+      success: true,
+      data: users,
+      message: 'Active users retrieved successfully',
+    };
+  }
   /**
    * Get active astrologers
    */
