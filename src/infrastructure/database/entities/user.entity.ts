@@ -19,6 +19,18 @@ export enum UserStatus {
   SUSPENDED = 'suspended',
 }
 
+export enum SessionStatus {
+  IDLE = 'idle',
+  IN_SESSION = 'in_session',
+}
+
+export enum ConsultationAvailability {
+  AVAILABLE = 'available', // Ready for consultations
+  UNAVAILABLE = 'unavailable', // User unavailable (AFK, break)
+  BUSY = 'busy', // In session (auto-set)
+  OFFLINE = 'offline', // Logged out
+}
+
 export enum SyncStatus {
   SYNCED = 'synced',
   PENDING = 'pending',
@@ -27,25 +39,27 @@ export enum SyncStatus {
 
 @Entity('users')
 @Check(`"type" IN ('user', 'astrologer')`)
+@Check(`"session_status" IN ('idle', 'in_session')`)
+@Check(`"consultation_availability" IN ('available', 'unavailable', 'busy', 'offline')`)
 @Check(`"status" IN ('active', 'inactive', 'suspended')`)
 @Check(`"sync_status" IN ('synced', 'pending', 'failed')`)
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  // Basic User Info
+  // CORE IDENTITY (Stable)
   @Column({ type: 'varchar', length: 255 })
   @Index()
   name: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  @Index()
   email: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'varchar', length: 20, nullable: false })
+  @Index()
   phone?: string;
 
-  // User Type
+  // Classification
   @Column({
     type: 'enum',
     enum: UserType,
@@ -62,22 +76,29 @@ export class User {
   @Index()
   status: UserStatus;
 
+  // Frequently READ STATUS
+  @Column({
+    type: 'enum',
+    enum: ConsultationAvailability,
+    default: ConsultationAvailability.OFFLINE,
+  })
+  @Index() // Critical for availability queries
+  consultation_availability: ConsultationAvailability;
+
+  @Column({
+    type: 'enum',
+    enum: SessionStatus,
+    default: SessionStatus.IDLE,
+  })
+  @Index()
+  session_status: SessionStatus;
+
   // Profile Info
   @Column({ type: 'text', nullable: true })
   avatar_url?: string;
 
   @Column({ type: 'text', nullable: true })
   bio?: string;
-
-  // Astrologer-specific fields
-  @Column({ type: 'decimal', precision: 3, scale: 2, nullable: true })
-  rating?: number;
-
-  @Column({ type: 'int', default: 0 })
-  total_consultations: number;
-
-  @Column({ type: 'int', default: 0 })
-  completed_consultations: number;
 
   // Sync fields
   @Column({
@@ -106,15 +127,63 @@ export class User {
   updated_at: Date;
 
   // Business Methods (Domain Logic)
-  updateProfile(updates: { name?: string; email?: string }): void {
+  updateProfile(updates: {
+    name?: string;
+    email?: string;
+    bio?: string;
+    avatar_url?: string;
+  }): void {
     if (updates.name) this.name = updates.name;
     if (updates.email !== undefined) this.email = updates.email;
+    if (updates.bio !== undefined) this.bio = updates.bio;
+    if (updates.avatar_url !== undefined) this.avatar_url = updates.avatar_url;
     this.updated_at = new Date();
   }
 
   markAsSynced(): void {
     this.sync_status = SyncStatus.SYNCED;
     this.last_sync_at = new Date();
+    this.updated_at = new Date();
+  }
+
+  //availability methods (low-latency)
+  isAvailableForConsultation(): boolean {
+    return (
+      this.consultation_availability === ConsultationAvailability.AVAILABLE
+    );
+  }
+
+  markAvailable(): void {
+    this.consultation_availability = ConsultationAvailability.AVAILABLE;
+    this.updated_at = new Date();
+  }
+
+  markUnavailable(): void {
+    this.consultation_availability = ConsultationAvailability.UNAVAILABLE;
+    this.updated_at = new Date();
+  }
+
+  markOffline(): void {
+    this.consultation_availability = ConsultationAvailability.OFFLINE;
+    this.updated_at = new Date();
+  }
+
+  // session methods
+  isInSession(): boolean {
+    return this.session_status === SessionStatus.IN_SESSION;
+  }
+
+  markInSession(): void {
+    this.session_status = SessionStatus.IN_SESSION;
+    this.consultation_availability = ConsultationAvailability.BUSY; // Auto-set busy
+    this.updated_at = new Date();
+  }
+
+  markIdle(): void {
+    this.session_status = SessionStatus.IDLE;
+    // Don't auto-change availability - user controls that here
+    // uncomment the line if you want otherwise here
+    // this.consultation_availability = ConsultationAvailability.AVAILABLE
     this.updated_at = new Date();
   }
 
@@ -125,11 +194,10 @@ export class User {
   isAstrologer(): boolean {
     return this.type === UserType.ASTROLOGER;
   }
-
   // Factory method
   static create(props: {
     name: string;
-    email?: string;  // can be optional here
+    email?: string; // can be optional here
     externalId: string;
     type: UserType;
     phone: string;
@@ -137,11 +205,13 @@ export class User {
     return {
       name: props.name,
       email: props.email,
+      phone: props.phone,
       external_id: props.externalId,
       type: props.type,
       status: UserStatus.ACTIVE,
+      session_status: SessionStatus.IDLE,
+      consultation_availability: ConsultationAvailability.OFFLINE,
       sync_status: SyncStatus.PENDING,
-      phone: props.phone,
       created_at: new Date(),
       updated_at: new Date(),
     };

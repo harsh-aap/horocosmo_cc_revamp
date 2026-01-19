@@ -1,4 +1,7 @@
-import { User, UserType } from 'src/infrastructure/database/entities/user.entity';
+import {
+  User,
+  UserType,
+} from 'src/infrastructure/database/entities/user.entity';
 
 /**
  * Symbol used for dependency injection.
@@ -13,11 +16,11 @@ export const SYNC_USER_PORT = Symbol('SYNC_USER_PORT');
  * in the system. Typically comes from an external system or backend.
  */
 export interface SyncUserInput {
-  externalId: string;       // Unique external identifier for the user (e.g., from a third-party system)
-  name: string;             // Full name of the user
-  email?: string | null;    // Optional email address
-  type: UserType;           // Type of user (e.g., astrologer, client, etc.)
-  phone: string;            // Phone number of the user
+  externalId: string; // Unique external identifier for the user (e.g., from a third-party system)
+  name: string; // Full name of the user
+  email?: string | null; // Optional email address
+  type: UserType; // Type of user (e.g., astrologer, client, etc.)
+  phone: string; // Phone number of the user
 }
 
 /**
@@ -56,4 +59,3 @@ export interface SyncUserPort {
    */
   create(userData: Partial<User>): Promise<User>;
 }
-

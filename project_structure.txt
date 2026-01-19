@@ -122,3 +122,166 @@ src/
     ├── video-sdk/                            # 📹 Video calling
     ├── notifications/                        # 🔔 Push notifications
     └── payment/                              # 💳 Payment processing
+
+
+
+
+
+
+
+    src/core/
+    ├── auth/                    # 🔐 Authentication & Authorization
+    ├── user/                    # 👤 User Management & Profiles  
+    ├── billing/                 # 💰 Balance, Transactions & Billing Rules
+    ├── chat/                    # 💬 Real-time Messaging & Chat
+    ├── session/                 # 📅 Consultation Sessions & Lifecycle
+    └── consultation/            # 🎯 Orchestrator (if needed)
+
+
+    src/core/billing/
+    ├── application/
+    │   ├── interfaces/
+    │   │   ├── balance.interface.ts           # BalancePort
+    │   │   ├── billing.interface.ts           # BillingPort
+    │   │   └── payment.interface.ts           # PaymentPort (future)
+    │   │
+    │   └── usecaes/
+    │       ├── get-user-balance.usecase.ts
+    │       ├── deduct-balance.usecase.ts
+    │       ├── add-balance.usecase.ts
+    │       ├── create-transaction.usecase.ts
+    │       ├── get-transaction-history.usecase.ts
+    │       └── validate-billing.usecase.ts
+    │
+    ├── infrastructure/
+    │   ├── base-billing.repository.ts
+    │   ├── balance.repository.ts
+    │   ├── billing.repository.ts
+    │   └── billing-queue.service.ts          # Queue-based processing
+    │
+    ├── presentation/
+    │   ├── dto/
+    │   │   ├── balance.dto.ts
+    │   │   └── billing.dto.ts
+    │   │
+    │   └── controllers/
+    │       └── billing.controller.ts
+    │
+    ├── billing.module.ts
+    └── billing.service.ts                    # Real-time billing processor
+
+
+
+
+    src/core/chat/
+    ├── application/
+    │   ├── interfaces/
+    │   │   ├── chat.interface.ts              # ChatPort
+    │   │   ├── message.interface.ts           # MessagePort
+    │   │   └── room.interface.ts              # RoomPort
+    │   │
+    │   └── usecaes/
+    │       ├── send-message.usecase.ts
+    │       ├── get-chat-history.usecase.ts
+    │       ├── create-chat-room.usecase.ts
+    │       ├── join-chat-room.usecase.ts
+    │       └── mark-messages-read.usecase.ts
+    │
+    ├── infrastructure/
+    │   ├── base-chat.repository.ts
+    │   ├── chat.repository.ts
+    │   ├── message.repository.ts
+    │   ├── room.repository.ts
+    │   └── websocket/
+    │       ├── chat.gateway.ts                # Socket.IO for chat
+    │       ├── chat-events.ts
+    │       └── middleware/
+    │           └── auth.middleware.ts
+    │
+    ├── presentation/
+    │   ├── dto/
+    │   │   ├── message.dto.ts
+    │   │   └── room.dto.ts
+    │   │
+    │   └── controllers/
+    │       └── chat.controller.ts             # REST endpoints for chat
+    │
+    └── chat.module.ts
+
+
+
+
+
+
+src/core/session/
+├── application/
+│   ├── interfaces/
+│   │   ├── session.interface.ts           # SessionPort
+│   │   ├── waiting-list.interface.ts      # WaitingListPort
+│   │   └── availability.interface.ts      # AvailabilityPort
+│   │
+│   └── usecaes/
+│       ├── create-session.usecase.ts
+│       ├── join-session.usecase.ts
+│       ├── end-session.usecase.ts
+│       ├── manage-waiting-list.usecase.ts
+│       ├── check-availability.usecase.ts
+│       └── get-session-history.usecase.ts
+│
+├── infrastructure/
+│   ├── base-session.repository.ts
+│   ├── session.repository.ts
+│   ├── waiting-list.repository.ts
+│   ├── availability.repository.ts
+│   └── websocket/
+│       ├── session.gateway.ts             # Socket.IO for sessions
+│       └── events.ts
+│
+├── presentation/
+│   ├── dto/
+│   │   ├── session.dto.ts
+│   │   └── waiting-list.dto.ts
+│   │
+│   └── controllers/
+│       └── session.controller.ts
+│
+└── session.module.ts
+
+
+
+
+
+
+src/core/user/
+├── application/
+│   ├── interfaces/
+│   │   ├── user-profile.interface.ts      # ✅ Keep existing
+│   │   ├── user-lookup.interface.ts       # ✅ Keep existing
+│   │   ├── sync-user.interface.ts         # ✅ Keep existing
+│   │   └── astrologer.interface.ts        # 🆕 Astrologer profiles only
+│   │
+│   └── usecaes/
+│       ├── sync-user.usecase.ts           # ✅ Keep existing
+│       ├── get-user-profile.usecase.ts    # ✅ Keep existing
+│       ├── update-user-profile.usecase.ts # ✅ Keep existing
+│       ├── get-active-astrologers.usecase.ts # ✅ Keep existing
+│       ├── update-astrologer-profile.usecase.ts # 🆕 NEW
+│       └── get-astrologer-profile.usecase.ts    # 🆕 NEW
+│
+├── infrastructure/
+│   ├── base-user.repository.ts            # ✅ Keep existing
+│   ├── sync-user.repository.ts            # ✅ Keep existing
+│   ├── user-profile.repository.ts         # ✅ Keep existing
+│   ├── user-lookup.repository.ts          # ✅ Keep existing
+│   └── astrologer.repository.ts           # 🆕 NEW
+│
+├── presentation/
+│   ├── dto/
+│   │   ├── sync-user-request.dto.ts       # ✅ Keep existing
+│   │   ├── update-profile-request.dto.ts  # ✅ Keep existing
+│   │   └── astrologer-profile.dto.ts      # 🆕 NEW
+│   │
+│   └── controllers/
+│       └── user.controller.ts             # ✅ Keep existing (add astrologer endpoints)
+│
+└── user.module.ts                         # ✅ Update with astrologer providers

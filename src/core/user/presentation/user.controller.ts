@@ -12,7 +12,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 
 import { SyncUserUseCase } from '../application/usecaes/sync-user.usecase';
 import { GetUserProfileUseCase } from '../application/usecaes/get-user.usecase';
-import { UpdateUserProfileUseCase } from '../application/usecaes/update-user-profile.usecase';
+import { UpdateUserProfileUseCase } from '../application/usecaes/update-user-core-details.usecase';
 import { GetActiveAstrologersUseCase } from '../application/usecaes/get-active-astrologers.usecase';
 import { GetActiveUsersUseCase } from '../application/usecaes/get-active-users.usecase';
 import { SyncUserRequestDto } from './dto/sync-user-request.dto';

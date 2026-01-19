@@ -1,21 +1,21 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import {
-  USER_LOOKUP_PORT,
-  type UserLookupPort,
-} from '../interfaces/user-lookup.interface';
+  USER_QUERY_PORT,
+  type UserQueryPort,
+} from '../interfaces/user-query.interface';
 import { User } from 'src/infrastructure/database/entities/user.entity';
 
 @Injectable()
 export class GetActiveUsersUseCase {
   private readonly logger = new Logger(GetActiveUsersUseCase.name);
   constructor(
-    @Inject(USER_LOOKUP_PORT)
-    private readonly userLookupPort: UserLookupPort,
+    @Inject(USER_QUERY_PORT)
+    private readonly userQueryPort: UserQueryPort,
   ) {}
 
   async execute(): Promise<User[]> {
     try {
-      const users = await this.userLookupPort.findActiveUsers();
+      const users = await this.userQueryPort.findActiveUsers();
       return users;
     } catch (error) {
       this.logger.error(
