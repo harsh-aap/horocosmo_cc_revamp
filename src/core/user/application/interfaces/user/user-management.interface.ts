@@ -17,8 +17,6 @@ export const USER_MANAGEMENT_PORT = Symbol('USER_MANAGEMENT_PORT');
 export interface UpdateCoreDetailsInput {
   name?: string;           // Optional full name update
   email?: string;          // Optional email update
-  bio?: string;           // Optional description/bio
-  avatar_url?: string;    // Profile picture URL
 }
 
 /**

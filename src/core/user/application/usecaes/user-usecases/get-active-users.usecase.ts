@@ -2,7 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import {
   USER_QUERY_PORT,
   type UserQueryPort,
-} from '../interfaces/user-query.interface';
+} from '../../interfaces/user/user-query.interface';
 import { User } from 'src/infrastructure/database/entities/user.entity';
 
 @Injectable()

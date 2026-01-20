@@ -10,13 +10,13 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 
-import { SyncUserUseCase } from '../application/usecaes/sync-user.usecase';
-import { GetUserProfileUseCase } from '../application/usecaes/get-user.usecase';
-import { UpdateUserProfileUseCase } from '../application/usecaes/update-user-core-details.usecase';
-import { GetActiveAstrologersUseCase } from '../application/usecaes/get-active-astrologers.usecase';
-import { GetActiveUsersUseCase } from '../application/usecaes/get-active-users.usecase';
+import { SyncUserUseCase } from '../application/usecaes/user-usecases/sync-user.usecase';
+import { UpdateUserCoreDetailsUseCase } from '../application/usecaes/user-usecases/update-user-core-details.usecase';
+import { GetActiveAstrologersUseCase } from '../application/usecaes/user-usecases/get-active-astrologers.usecase';
+import { GetActiveUsersUseCase } from '../application/usecaes/user-usecases/get-active-users.usecase';
+import { GetUserProfileUseCase } from '../application/usecaes/user-usecases/get-user.usecase';
 import { SyncUserRequestDto } from './dto/sync-user-request.dto';
-import { UpdateProfileRequestDto } from './dto/update-profile-request.dto';
+import { UpdateUserCoreRequestDto } from './dto/update-user-core-details-request.dto';
 import { UserType } from 'src/infrastructure/database/entities/user.entity';
 
 /**
@@ -31,10 +31,10 @@ export class UserController {
   constructor(
     private readonly syncUserUseCase: SyncUserUseCase,
     private readonly getUserProfileUseCase: GetUserProfileUseCase,
-    private readonly updateUserProfileUseCase: UpdateUserProfileUseCase,
+    private readonly updateUserCoreDetails: UpdateUserCoreDetailsUseCase,
     private readonly getActiveAstrologersUseCase: GetActiveAstrologersUseCase,
     private readonly getActiveUserUseCase: GetActiveUsersUseCase,
-  ) {}
+  ) { }
 
   /**
    * Sync user from external system
@@ -89,7 +89,8 @@ export class UserController {
   /**
    * Get user profile by ID
    */
-  @Get(':id/profile')
+  // previously @Get(':id/profile')
+  @Get(':id')
   @ApiOperation({
     summary: 'Get user profile',
     description: 'Retrieves a user profile by their ID.',
@@ -135,7 +136,7 @@ export class UserController {
   /**
    * Update user profile
    */
-  @Put(':id/profile')
+  @Put(':id')
   @ApiOperation({
     summary: 'Update user profile',
     description: 'Updates a user profile with provided data.',
@@ -166,9 +167,9 @@ export class UserController {
   })
   async updateUserProfile(
     @Param('id') userId: string,
-    @Body() request: UpdateProfileRequestDto,
+    @Body() request: UpdateUserCoreRequestDto,
   ) {
-    const user = await this.updateUserProfileUseCase.execute(userId, request);
+    const user = await this.updateUserCoreDetails.execute(userId, request);
 
     return {
       success: true,

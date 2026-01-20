@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { BaseUserRepository } from './base-user.repository';
-import { UserQueryPort } from '../application/interfaces/user-query.interface';
+import { UserQueryPort } from '../../application/interfaces/user/user-query.interface';
 
 @Injectable()
 export class UserQueryRepository

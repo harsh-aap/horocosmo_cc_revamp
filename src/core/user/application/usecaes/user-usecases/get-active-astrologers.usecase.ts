@@ -1,11 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
 import { User } from 'src/infrastructure/database/entities/user.entity';
-import {
-  type UserQueryPort,
-  USER_QUERY_PORT,
-} from '../interfaces/user-query.interface';
-
+import { type UserQueryPort, USER_QUERY_PORT } from '../../interfaces/user/user-query.interface';
 @Injectable()
 export class GetActiveAstrologersUseCase {
   private readonly logger = new Logger(GetActiveAstrologersUseCase.name);
@@ -13,7 +9,7 @@ export class GetActiveAstrologersUseCase {
   constructor(
     @Inject(USER_QUERY_PORT)
     private readonly userQueryPort: UserQueryPort,
-  ) {}
+  ) { }
 
   async execute(): Promise<User[]> {
     this.logger.debug('Getting active astrologers');

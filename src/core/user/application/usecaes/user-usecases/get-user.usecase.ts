@@ -3,7 +3,7 @@ import { User } from 'src/infrastructure/database/entities/user.entity';
 import {
   USER_QUERY_PORT,
   type UserQueryPort,
-} from '../interfaces/user-query.interface';
+} from '../../interfaces/user/user-query.interface';
 
 @Injectable()
 export class GetUserProfileUseCase {

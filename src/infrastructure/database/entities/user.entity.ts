@@ -40,7 +40,9 @@ export enum SyncStatus {
 @Entity('users')
 @Check(`"type" IN ('user', 'astrologer')`)
 @Check(`"session_status" IN ('idle', 'in_session')`)
-@Check(`"consultation_availability" IN ('available', 'unavailable', 'busy', 'offline')`)
+@Check(
+  `"consultation_availability" IN ('available', 'unavailable', 'busy', 'offline')`,
+)
 @Check(`"status" IN ('active', 'inactive', 'suspended')`)
 @Check(`"sync_status" IN ('synced', 'pending', 'failed')`)
 export class User {
@@ -53,11 +55,11 @@ export class User {
   name: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  email: string;
+  email?: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: false })
+  @Column({ type: 'varchar', length: 20 })
   @Index()
-  phone?: string;
+  phone: string;
 
   // Classification
   @Column({
@@ -93,13 +95,6 @@ export class User {
   @Index()
   session_status: SessionStatus;
 
-  // Profile Info
-  @Column({ type: 'text', nullable: true })
-  avatar_url?: string;
-
-  @Column({ type: 'text', nullable: true })
-  bio?: string;
-
   // Sync fields
   @Column({
     type: 'enum',
@@ -130,13 +125,9 @@ export class User {
   updateProfile(updates: {
     name?: string;
     email?: string;
-    bio?: string;
-    avatar_url?: string;
   }): void {
     if (updates.name) this.name = updates.name;
     if (updates.email !== undefined) this.email = updates.email;
-    if (updates.bio !== undefined) this.bio = updates.bio;
-    if (updates.avatar_url !== undefined) this.avatar_url = updates.avatar_url;
     this.updated_at = new Date();
   }
 

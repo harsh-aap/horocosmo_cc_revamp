@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { User } from 'src/infrastructure/database/entities/user.entity';
-import { SyncUserPort } from '../application/interfaces/sync-user.interface';
+import { SyncUserPort } from '../../application/interfaces/user/sync-user.interface';
 import { BaseUserRepository } from './base-user.repository';
 
 /**
@@ -10,8 +10,7 @@ import { BaseUserRepository } from './base-user.repository';
 @Injectable()
 export class SyncUserRepository
   extends BaseUserRepository
-  implements SyncUserPort
-{
+  implements SyncUserPort {
   /**
    * Find a user by their external ID.
    * @param externalId - The external system ID for the user

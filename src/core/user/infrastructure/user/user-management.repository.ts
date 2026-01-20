@@ -3,7 +3,7 @@ import { BaseUserRepository } from './base-user.repository';
 import {
   UserManagementPort,
   UpdateCoreDetailsInput,
-} from '../application/interfaces/user-management.interface';
+} from '../../application/interfaces/user/user-management.interface';
 import {
   UserStatus,
   User,
@@ -13,8 +13,7 @@ import {
 @Injectable()
 export class UserManagementRepository
   extends BaseUserRepository
-  implements UserManagementPort
-{
+  implements UserManagementPort {
   async updateUserCoreDetails(
     userId: string,
     updates: UpdateCoreDetailsInput,
@@ -59,7 +58,7 @@ export class UserManagementRepository
         user.markAvailable();
         break;
       case ConsultationAvailability.UNAVAILABLE:
-        user.markUnavailable;
+        user.markUnavailable();
         break;
       case ConsultationAvailability.OFFLINE:
         user.markOffline();

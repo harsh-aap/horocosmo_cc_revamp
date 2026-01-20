@@ -5,16 +5,16 @@ import {
   type UserManagementPort,
   UpdateCoreDetailsInput,
   USER_MANAGEMENT_PORT,
-} from '../interfaces/user-management.interface';
+} from '../../interfaces/user/user-management.interface';
 
 @Injectable()
-export class UpdateUserProfileUseCase {
-  private readonly logger = new Logger(UpdateUserProfileUseCase.name);
+export class UpdateUserCoreDetailsUseCase {
+  private readonly logger = new Logger(UpdateUserCoreDetailsUseCase.name);
 
   constructor(
     @Inject(USER_MANAGEMENT_PORT)
     private readonly userManagementPort: UserManagementPort,
-  ) {}
+  ) { }
 
   async execute(userId: string, updates: UpdateCoreDetailsInput): Promise<User> {
     this.logger.debug(`Updating profile for user: ${userId}`);

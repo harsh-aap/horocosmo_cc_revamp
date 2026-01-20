@@ -4,7 +4,7 @@ import {
   SYNC_USER_PORT,
   type SyncUserInput,
   type SyncUserPort,
-} from '../interfaces/sync-user.interface';
+} from '../../interfaces/user/sync-user.interface';
 
 @Injectable()
 export class SyncUserUseCase {

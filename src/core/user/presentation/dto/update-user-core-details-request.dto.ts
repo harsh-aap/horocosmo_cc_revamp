@@ -4,7 +4,7 @@ import { IsString, IsEmail, IsOptional, IsNotEmpty } from 'class-validator';
  * DTO for updating user profile.
  * Validates the incoming request body for profile update endpoints.
  */
-export class UpdateProfileRequestDto {
+export class UpdateUserCoreRequestDto {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
@@ -13,9 +13,4 @@ export class UpdateProfileRequestDto {
   @IsOptional()
   @IsEmail()
   email?: string;
-
-  @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  phone?: string;
 }
