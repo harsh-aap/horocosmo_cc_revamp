@@ -6,6 +6,7 @@ import { DatabaseModule } from './infrastructure/database/database.module';
 import { CacheModule } from './infrastructure/cache/cache.module';
 import { MonitoringModule } from './infrastructure/monitoring/monitoring.module';
 import { UserModule } from './core/user/user.module';
+import { WalletModule } from './core/wallet/wallet.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { UserModule } from './core/user/user.module';
     DatabaseModule,
     CacheModule,
     MonitoringModule,
-    UserModule
+    UserModule,
+    WalletModule,
   ],
   controllers: [AppController],
   providers: [AppService],

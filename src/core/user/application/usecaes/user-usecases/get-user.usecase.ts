@@ -6,8 +6,8 @@ import {
 } from '../../interfaces/user/user-query.interface';
 
 @Injectable()
-export class GetUserProfileUseCase {
-  private readonly logger = new Logger(GetUserProfileUseCase.name);
+export class GetUserUseCase {
+  private readonly logger = new Logger(GetUserUseCase.name);
 
   constructor(
     @Inject(USER_QUERY_PORT)

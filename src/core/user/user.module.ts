@@ -18,9 +18,23 @@ import { ASTROLOGER_PROFILE_QUERY_PORT } from './application/interfaces/user-ast
 import { SyncUserUseCase } from './application/usecaes/user-usecases/sync-user.usecase';
 import { GetActiveAstrologersUseCase } from './application/usecaes/user-usecases/get-active-astrologers.usecase';
 import { GetActiveUsersUseCase } from './application/usecaes/user-usecases/get-active-users.usecase';
-import { GetUserProfileUseCase } from './application/usecaes/user-usecases/get-user.usecase';
+import { GetUserUseCase } from './application/usecaes/user-usecases/get-user.usecase';
 import { UpdateUserCoreDetailsUseCase } from './application/usecaes/user-usecases/update-user-core-details.usecase';
 import { UpdateUserProfileUseCase } from './application/usecaes/user-profile-usecases/update-user-profile.usecase';
+import { GetUserProfileUseCase } from './application/usecaes/user-profile-usecases/get-user-profile.usecase';
+import { CreateUserProfileUseCase } from './application/usecaes/user-profile-usecases/create-user-profile.usecase';
+import { AddUserRatingUseCase } from './application/usecaes/user-profile-usecases/add-user-rating.usecase';
+import { UpdateUserProfileStatsUseCase } from './application/usecaes/user-profile-usecases/update-user-profile-stats.usecase';
+import { GetUserProfileStatsUseCase } from './application/usecaes/user-profile-usecases/get-user-profile-stats.usecase';
+import { GetTopRatedUserProfilesUseCase } from './application/usecaes/user-profile-usecases/get-top-rated-user-profiles.usecase';
+import { GetAstrologerProfileUseCase } from './application/usecaes/astrologer-profile-usecases/get-astrologer-profile.usecase';
+import { UpdateAstrologerProfileUseCase } from './application/usecaes/astrologer-profile-usecases/update-astrologer-profile.usecase';
+import { GetAstrologerAvailabilityUseCase } from './application/usecaes/astrologer-profile-usecases/get-astrologer-availability.usecase';
+import { GetAstrologerBySpecializationUseCase } from './application/usecaes/astrologer-profile-usecases/get-astrologer-by-specialization.usecase';
+import { UpdateAstrologerRatesUseCase } from './application/usecaes/astrologer-profile-usecases/update-astrologer-rates.usecase';
+import { UpdateAstrologerStatsUseCase } from './application/usecaes/astrologer-profile-usecases/update-astrologer-stats.usecase';
+import { CalculateConsultationCostUseCase } from './application/usecaes/astrologer-profile-usecases/calculate-consultation-cost.usecase';
+import { GetTopRatedAstrologersUseCase } from './application/usecaes/astrologer-profile-usecases/get-top-rated-astrologers.usecase';
 
 // Repositories
 import { SyncUserRepository } from './infrastructure/user/sync-user.repository';
@@ -31,18 +45,14 @@ import { UserProfileQueryRepository } from './infrastructure/user-profile/user-p
 import { UserManagementRepository } from './infrastructure/user/user-management.repository';
 import { AstrologerProfileManagementRepository } from './infrastructure/astrologer-profile/astrologer-profile-management.repository';
 import { AstrologerProfileQueryRepository } from './infrastructure/astrologer-profile/astrologer-profile-query.repository';
+import { AstrologerProfileBaseRepository } from './infrastructure/astrologer-profile/astrologer-profile-base.repository';
+import { BaseUserRepository } from './infrastructure/user/base-user.repository';
 
 // Controllers
 import { UserController } from './presentation/user.controller';
 import { UserProfileController } from './presentation/user-profile.controller';
-import { AstrologerProfileBaseRepository } from './infrastructure/astrologer-profile/astrologer-profile-base.repository';
-import { BaseUserRepository } from './infrastructure/user/base-user.repository';
-import { CreateUserProfileUseCase } from './application/usecaes/user-profile-usecases/create-user-profile.usecase';
-import { AddUserRatingUseCase } from './application/usecaes/user-profile-usecases/add-user-rating.usecase';
-import { UpdateUserProfileStatsUseCase } from './application/usecaes/user-profile-usecases/update-user-profile-stats.usecase';
-import { GetUserProfileStatsUseCase } from './application/usecaes/user-profile-usecases/get-user-profile-stats.usecase';
-import { GetTopRatedAstrologersUseCase } from './application/usecaes/astrologer-profile-usecases/get-top-rated-astrologers.usecase';
-import { GetTopRatedUserProfilesUseCase } from './application/usecaes/user-profile-usecases/get-top-rated-user-profiles.usecase';
+import { AstrologerProfileController } from './presentation/user-astrologer-profile.controller';
+import { CreateAstrologerProfileUseCase } from './application/usecaes/astrologer-profile-usecases/create-astrologer-profile.usecase';
 
 /**
  * UserModule
@@ -62,7 +72,8 @@ import { GetTopRatedUserProfilesUseCase } from './application/usecaes/user-profi
   controllers: [
     // HTTP endpoints for user-related actions
     UserController,
-    UserProfileController
+    UserProfileController,
+    AstrologerProfileController
   ],
   providers: [
     // 1. Repository implementation
@@ -112,23 +123,32 @@ import { GetTopRatedUserProfilesUseCase } from './application/usecaes/user-profi
     // Business logic that orchestrates user creation/syncing
     SyncUserUseCase,
     GetActiveAstrologersUseCase,
-    GetUserProfileUseCase,
+    GetUserUseCase,
     UpdateUserCoreDetailsUseCase,
     UpdateUserProfileUseCase,
     GetActiveUsersUseCase,
+    GetUserProfileUseCase,
     CreateUserProfileUseCase,
     AddUserRatingUseCase,
     UpdateUserProfileStatsUseCase,
     GetUserProfileStatsUseCase,
     GetTopRatedUserProfilesUseCase,
+  
+    CreateAstrologerProfileUseCase,
     GetTopRatedAstrologersUseCase,
-
+    GetAstrologerProfileUseCase,
+    UpdateAstrologerProfileUseCase,
+    GetAstrologerAvailabilityUseCase,
+    GetAstrologerBySpecializationUseCase,
+    UpdateAstrologerRatesUseCase,
+    UpdateAstrologerStatsUseCase,
+    CalculateConsultationCostUseCase,
   ],
   exports: [
     // Export use cases for other modules to use
     SyncUserUseCase,
     GetActiveAstrologersUseCase,
-    GetUserProfileUseCase,
+    GetUserUseCase,
     UpdateUserCoreDetailsUseCase,
     GetActiveUsersUseCase,
   ],

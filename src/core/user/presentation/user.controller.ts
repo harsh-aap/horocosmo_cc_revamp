@@ -14,10 +14,10 @@ import { SyncUserUseCase } from '../application/usecaes/user-usecases/sync-user.
 import { UpdateUserCoreDetailsUseCase } from '../application/usecaes/user-usecases/update-user-core-details.usecase';
 import { GetActiveAstrologersUseCase } from '../application/usecaes/user-usecases/get-active-astrologers.usecase';
 import { GetActiveUsersUseCase } from '../application/usecaes/user-usecases/get-active-users.usecase';
-import { GetUserProfileUseCase } from '../application/usecaes/user-usecases/get-user.usecase';
 import { SyncUserRequestDto } from './dto/sync-user-request.dto';
 import { UpdateUserCoreRequestDto } from './dto/update-user-core-details-request.dto';
 import { UserType } from 'src/infrastructure/database/entities/user.entity';
+import { GetUserUseCase } from '../application/usecaes/user-usecases/get-user.usecase';
 
 /**
  * UserController
@@ -30,7 +30,7 @@ import { UserType } from 'src/infrastructure/database/entities/user.entity';
 export class UserController {
   constructor(
     private readonly syncUserUseCase: SyncUserUseCase,
-    private readonly getUserProfileUseCase: GetUserProfileUseCase,
+    private readonly getUserProfileUseCase: GetUserUseCase, 
     private readonly updateUserCoreDetails: UpdateUserCoreDetailsUseCase,
     private readonly getActiveAstrologersUseCase: GetActiveAstrologersUseCase,
     private readonly getActiveUserUseCase: GetActiveUsersUseCase,
