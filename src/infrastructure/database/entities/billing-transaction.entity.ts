@@ -30,7 +30,7 @@ export class BillingTransaction {
   @Column({ type: 'varchar', length: 255, nullable: true }) external_transaction_id?: string;
   @Column({ type: 'text', nullable: true }) description?: string;
   @Column({ type: 'timestamp', nullable: true }) processed_at?: Date;
-  
+
   @CreateDateColumn() created_at: Date;
 
   // Business Methods
