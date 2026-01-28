@@ -17,6 +17,9 @@ import { MessageBaseRepository } from './infrastructure/message-base.repository'
 import { MessageQueryRepository } from './infrastructure/message-query.repository';
 import { MessageManagementRepository } from './infrastructure/message-management.repository';
 
+// chat related stuff
+import { ChatGateway } from './infrastructure/gateway/chat.gateway';
+
 // Use Cases
 import { CreateConversationUseCase } from './application/usecases/create-conversation.usecase';
 import { SendMessageUseCase } from './application/usecases/send-message.usecase';
@@ -35,6 +38,8 @@ import { ChatController } from './presentation/chat.controller';
     ChatController,
   ],
   providers: [
+    // Chat related
+    ChatGateway,
     // Repositories
     ConversationBaseRepository,
     {
@@ -72,6 +77,8 @@ import { ChatController } from './presentation/chat.controller';
     GetConversationHistoryUseCase,
     ArchiveConversationUseCase,
     BlockConversationUseCase,
+    //Chat related
+    ChatGateway,
   ],
 })
 export class ChatModule { }
