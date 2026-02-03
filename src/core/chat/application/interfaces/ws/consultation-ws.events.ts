@@ -1,14 +1,13 @@
 export const CONSULTATION_WS_EVENTS = {
-    join_thread: 'consultation:thread:join',
-    joined_thread: 'consultation:thread:joined',
-    join_thread_error: 'consultation:thread:join_error',
-
+    JOIN_THREAD: 'consultation:thread:join',
+    JOINED_THREAD: 'consultation:thread:joined',
+    JOIN_THREAD_ERROR: 'consultation:thread:join_error',
 
     // Message within a consultation thread
-    send_message: 'consultation:message:send',
-    send_message_ack: 'consultation:message:ack',
-    send_message_error: 'consultation:message:error',
-    message_received: 'consultation:message:received',
+    SEND_MESSAGE: 'consultation:message:send',
+    SEND_MESSAGE_ACK: 'consultation:message:ack',
+    SEND_MESSAGE_ERROR: 'consultation:message:error',
+    MESSAGE_RECEIVED: 'consultation:message:received',
 } as const
 
 // WebSocket payloads
